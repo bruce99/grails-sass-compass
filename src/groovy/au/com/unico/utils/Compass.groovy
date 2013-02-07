@@ -26,7 +26,7 @@ class Compass {
                 :css_path => '${config.sassConfig.compass.css_path}',
                 :cache_path => '${config.sassConfig.compass.cache_path}' }
         """
-        def libPath :? config.sassConfig.lib_path ?: "./lib"
+        def libPath = config.sassConfig.lib_path ?: "./lib"
         manager = new ScriptEngineManager()
         jRubyEngine = manager.getEngineByName("jruby")
         def tmp = '$VERBOSE = nil'
