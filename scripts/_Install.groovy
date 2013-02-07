@@ -8,3 +8,4 @@
 //
 //    ant.mkdir(dir:"${basedir}/grails-app/jobs")
 //
+ant.copy(file:"${sassPluginDir}/grails-app/conf/SassPlugin.groovy", toFile:"${basedir}/grails-app/conf/SassPlugin.groovy")

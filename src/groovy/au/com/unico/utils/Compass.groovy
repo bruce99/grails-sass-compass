@@ -9,7 +9,7 @@ class Compass {
     ScriptEngine jRubyEngine
     GString s
     Logger log
-    def config = ['sassConfig':['compass':['project_path':'.', 'sass_path':'src/sass', 'css_path':'web-app/css', 'cache_path':'.sass-cache-plugin'],'gems':["'compass'", "'sass'"],'requires':["'sass/plugin'"]]]
+    def config = ['sassConfig':['compass':['project_path':'.', 'sass_path':'src/sass', 'css_path':'web-app/css', 'cache_path':'.sass-cache-plugin'],'gems':["'compass'", "'sass'"],'requires':["'sass/plugin'"],'lib_path':'./lib']]
     Boolean lock = false
     Thread th
     def run = true
@@ -26,6 +26,7 @@ class Compass {
                 :css_path => '${config.sassConfig.compass.css_path}',
                 :cache_path => '${config.sassConfig.compass.cache_path}' }
         """
+        def libPath :? config.sassConfig.lib_path ?: "./lib"
         manager = new ScriptEngineManager()
         jRubyEngine = manager.getEngineByName("jruby")
         def tmp = '$VERBOSE = nil'
@@ -43,13 +44,13 @@ class Compass {
               require 'rubygems'
               require 'rubygems/dependency_installer'
               begin
-                Gem.path << "./lib"
+                Gem.path << "${libPath}"
                 Gem.refresh
                 reqing(gems + requires)
               rescue Exception=>e
                 theGems = []
                 gems.each { |gem|
-                  theGems += Gem::DependencyInstaller.new({:install_dir => "./lib"}).install(gem)
+                  theGems += Gem::DependencyInstaller.new({:install_dir => "${libPath}"}).install(gem)
                 }
                 theGems.each { |it|
                   it.activate()
