@@ -71,7 +71,11 @@ class Compass {
     private void doCompile() {
         if(manager == null)
             prepare()
+        if(lock)
+            return
+        lock = true
         jRubyEngine.eval(s)
+        lock = false
     }
     public static def getConfig() {
         return getInstance().@config
