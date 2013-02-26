@@ -18,9 +18,11 @@ target(possiblyCompassCompile: "Possibly do a compile") {
     (config.sassConfig.compass['sass_path'].toString() as File).eachFileRecurse { file ->
       src << file.lastModified()
     }
-    (config.sassConfig.compass['css_path'].toString() as File).eachFileRecurse { file ->
-      target << file.lastModified()
-    }
+    try {
+      (config.sassConfig.compass['css_path'].toString() as File).eachFileRecurse { file ->
+        target << file.lastModified()
+      }
+    } catch(all) {}
     if((grailsEnv != "development" && grailsEnv != "test") || target.max() < src.max()) {
         compassCompile()
     } else {
