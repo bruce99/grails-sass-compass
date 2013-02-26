@@ -11,6 +11,23 @@ target(compassCompile: "Compile using Compass") {
     Compass.setConfig(config)
     Compass.compile()
 }
+target(possiblyCompassCompile: "Possibly do a compile") {
+    config = new ConfigSlurper().parse(CompassConfig)
+    List src = []
+    List target = [0]
+    (config.sassConfig.compass['sass_path'].toString() as File).eachFileRecurse { file ->
+      src << file.lastModified()
+    }
+    (config.sassConfig.compass['css_path'].toString() as File).eachFileRecurse { file ->
+      target << file.lastModified()
+    }
+    if((grailsEnv != "development" && grailsEnv != "test") || target.max() < src.max()) {
+        compassCompile()
+    } else {
+      println """Not doing a compass compile because the target dir is newer than the source dir.\
+      Use the compile-compass task to force a compile (if desired)"""
+    }
+}
 
 //Stop compass - broken
 target(stopCompass: "Stop Compass") {
